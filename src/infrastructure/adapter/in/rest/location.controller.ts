@@ -17,7 +17,7 @@ export class LocationController {
   @ApiResponse({ status: 200, description: 'Location submitted successfully' })
   @ApiBody({ type: SubmitLocationDto })
   @Post(':userId')
-  async submitLocation(@Body() location: LocationDomain, @Param('userId') userId: number): Promise<void> {
-    await this.logAreaEntryUseCase.logEntry(userId, location);
+  async submitLocation(@Body() location: LocationDomain, @Param('userId') userId: number): Promise<boolean> {
+    return this.logAreaEntryUseCase.logEntry(userId, location);
   }
 }

@@ -23,12 +23,12 @@ export class AreaEntryLogService implements LogAreaEntryUseCase, GetAreaEntryLog
     private readonly checkAreaPort: CheckAreaPort
   ) {}
 
-  async logEntry(userId: number, location: LocationDomain): Promise<void> {
+  async logEntry(userId: number, location: LocationDomain): Promise<boolean> {
     const areas = await this.loadAreasPort.findAll();
     
     if(!areas.length) {
       this.logger.warn('No areas found');
-      return ;
+      return false;
     }
 
     const matchedArea = areas.find((area) => this.checkAreaPort.containsPoint(area.polygon, location.latitude, location.longitude));
@@ -38,8 +38,10 @@ export class AreaEntryLogService implements LogAreaEntryUseCase, GetAreaEntryLog
       const log = AreaEntryLogDomain.create(userId, matchedArea.id, new Date());
       this.logger.log('Creating area entry log');
       await this.createAreaEntryLogPort.create(log);
+      return true;
     } else {
       this.logger.warn('No area found for location');
+      return false;
     }
   }
 
