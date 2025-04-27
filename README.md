@@ -17,12 +17,7 @@ LocationDomain API, kullanıcı konumlarını ve alanlarını takip etmek için 
 npm install
 ```
 
-2. Veritabanını oluşturun:
-```bash
-createdb location_api
-```
-
-3. `.env` dosyasını düzenleyin:
+2. `.env` dosyasını düzenleyin:
 ```env
 DB_HOST=localhost
 DB_PORT=5432
@@ -32,7 +27,7 @@ DB_DATABASE=location_api
 NODE_ENV=development
 ```
 
-4. Uygulamayı başlatın:
+3. Uygulamayı başlatın:
 ```bash
 npm run start:dev
 ```
@@ -41,22 +36,6 @@ npm run start:dev
 
 Swagger dokümantasyonuna erişmek için:
 ```
-http://localhost:3000/api
+http://localhost:3000/docs
 ```
 
-## Test
-
-```bash
-# unit testler
-npm run test
-
-# e2e testler
-npm run test:e2e
-
-# test coverage
-npm run test:cov
-```
-
-## Lisans
-
-UNLICENSED
