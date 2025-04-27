@@ -9,11 +9,13 @@ import { Inject } from '@nestjs/common';
 export class LogController {
   constructor(
     @Inject('LoadAreaEntryLogPort')
-    private readonly getAreaEntryLogsUseCase: GetAreaEntryLogsUseCase) {}
+    private readonly getAreaEntryLogsUseCase: GetAreaEntryLogsUseCase
+  ) {}
+  
   @ApiOperation({ summary: 'Get all logs' })
   @ApiResponse({ status: 200, description: 'Returns all logs', type: [AreaEntryLogDomain] })
   @Get()
   async getLogs(): Promise<AreaEntryLogDomain[]> {
-    return this.getAreaEntryLogsUseCase.getAllLogs();
+    return this.getAreaEntryLogsUseCase.findAll();
   }
 }

@@ -6,9 +6,10 @@ import { CreateAreaEntryLogPort } from '../port/out/create-area-entry-log.port';
 import { CheckAreaPort } from '../port/out/check-area.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { LoadAreaEntryLogsPort } from '../port/out/load-area-entry-logs.port';
+import { GetAreaEntryLogsUseCase } from '../port/in/get-area-entry-logs.usecase';
 
 @Injectable()
-export class AreaEntryLogService implements LogAreaEntryUseCase {
+export class AreaEntryLogService implements LogAreaEntryUseCase, GetAreaEntryLogsUseCase {
   private readonly logger = new Logger(AreaEntryLogService.name);
   
   constructor(
@@ -42,7 +43,7 @@ export class AreaEntryLogService implements LogAreaEntryUseCase {
     }
   }
 
-  async getAll(): Promise<AreaEntryLogDomain[]> {
+  async findAll(): Promise<AreaEntryLogDomain[]> {
     return this.loadAreaEntryLogPort.findAll();
   }
 }
