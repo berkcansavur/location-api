@@ -15,10 +15,15 @@ import { RedisCacheAdapter } from './infrastructure/adapter/out/cache/redis/redi
 import { redisConfig } from './config/redis.config';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { AreaCacheService } from './application/service/area-cache.service';
+import dataSource from './config/data-source';
+
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(databaseConfig),
+    TypeOrmModule.forRootAsync({
+      useFactory: () => databaseConfig,
+      dataSourceFactory: async () => await dataSource.initialize(),
+    }),
     TypeOrmModule.forFeature([AreaModel, AreaEntryLogModel]),
     RedisModule.forRoot(redisConfig),
   ],
