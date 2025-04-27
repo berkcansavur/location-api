@@ -5,4 +5,5 @@ export interface IAreaRepository {
   findById(id: number): Promise<AreaDomain | null>;
   findAll(): Promise<AreaDomain[]>;
   update(area: AreaDomain): Promise<void>;
+  findNearestAreas(longitude: number, latitude: number, limit?: number): Promise<AreaDomain[]>;
 }

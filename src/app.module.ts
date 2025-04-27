@@ -11,15 +11,23 @@ import { AreaService } from './application/service/area.service';
 import { LogController } from './infrastructure/adapter/in/rest/log.controller';
 import { LocationController } from './infrastructure/adapter/in/rest/location.controller';
 import { AreaController } from './infrastructure/adapter/in/rest/area.controller';
+import { RedisCacheAdapter } from './infrastructure/adapter/out/cache/redis/redis-cache.adapter';
+import { redisConfig } from './config/redis.config';
+import { RedisModule } from '@nestjs-modules/ioredis';
+import { AreaCacheService } from './application/service/area-cache.service';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot(databaseConfig),
     TypeOrmModule.forFeature([AreaModel, AreaEntryLogModel]),
+    RedisModule.forRoot(redisConfig),
   ],
   providers: [
     AreaAdapter,
     AreaEntryLogAdapter,
     TurfGeometryService,
+    AreaCacheService,
+    AreaService,
     {
       provide: 'CreateAreaEntryLogPort',
       useClass: AreaEntryLogAdapter,
@@ -51,6 +59,10 @@ import { AreaController } from './infrastructure/adapter/in/rest/area.controller
     {
       provide: 'LogAreaEntryUseCase',
       useClass: AreaEntryLogService,
+    },
+    {
+      provide: 'RedisCachePort',
+      useClass: RedisCacheAdapter,
     },
   ],
   controllers: [

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AreaModel } from './model/area.model';
 import { LoadAreasPort } from '@/application/port/out/load-areas.port';
@@ -11,7 +11,8 @@ import { CreateAreaPort } from '@/application/port/out/create-area.port';
 export class AreaAdapter implements IAreaRepository, CreateAreaPort, LoadAreasPort {
   constructor(
     @InjectRepository(AreaModel)
-    private readonly areaRepository: Repository<AreaModel>
+    private readonly areaRepository: Repository<AreaModel>,
+    private readonly entityManager: EntityManager 
   ) {}
 
   async create(area: AreaDomain): Promise<void> {
@@ -35,6 +36,20 @@ export class AreaAdapter implements IAreaRepository, CreateAreaPort, LoadAreasPo
   async findAll(): Promise<AreaDomain[]> {
     const models = await this.areaRepository.find();
     return models.map(this.toDomain);
+  }
+
+  async findNearestAreas(longitude: number, latitude: number, limit = 5): Promise<AreaDomain[]> {
+    const areas = await this.entityManager
+      .createQueryBuilder(AreaModel, 'area')
+      .orderBy(
+        `area.polygon <-> ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)`,
+        'ASC'
+      )
+      .setParameters({ longitude, latitude })
+      .limit(limit)
+      .getMany();
+
+    return areas.map(this.toDomain);
   }
 
   private toModel(domain: AreaDomain): AreaModel {
