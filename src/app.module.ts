@@ -15,7 +15,7 @@ import { RedisCacheAdapter } from './infrastructure/adapter/out/cache/redis/redi
 import { redisConfig } from './config/redis.config';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { AreaCacheService } from './application/service/area-cache.service';
-import dataSource from './config/data-source';
+import { dataSource } from './config/data-source';
 
 
 @Module({

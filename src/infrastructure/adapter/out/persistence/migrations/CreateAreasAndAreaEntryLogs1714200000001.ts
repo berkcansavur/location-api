@@ -39,6 +39,5 @@ export class CreateAreasAndAreaEntryLogs1714200000001 implements MigrationInterf
     await queryRunner.query(`DROP TABLE IF EXISTS "area_entry_logs"`);
     await queryRunner.query(`DROP INDEX IF EXISTS "IDX_areas_polygon"`);
     await queryRunner.query(`DROP TABLE IF EXISTS "areas"`);
-    await queryRunner.query(`DROP EXTENSION IF EXISTS postgis`);
   }
 }

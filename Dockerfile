@@ -13,4 +13,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npx typeorm migration:run -d dist/config/data-source.js && node dist/main"]
+CMD ["sh", "-c", "npm run build && npm run migration:run && npm run start:prod"]
