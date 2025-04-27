@@ -1,7 +1,7 @@
 import { CreateAreaUseCase } from '@/application/port/in/create-area.usecase';
 import { GetAreasUseCase } from '@/application/port/in/get-areas.usecase';
 import { AreaDomain } from '@/domain/area/area.domain';
-import { Controller, Post, Get, Body } from '@nestjs/common';
+import { Controller, Post, Get, Body, Logger } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Inject } from '@nestjs/common';
 import { CreateAreaDto } from './dto/create-area.dto';
@@ -9,6 +9,7 @@ import { CreateAreaDto } from './dto/create-area.dto';
 @ApiTags('areas')
 @Controller('areas')
 export class AreaController {
+  private readonly logger = new Logger(AreaController.name);
   constructor(
     @Inject('CreateAreaUseCase')
     private readonly createAreaUseCase: CreateAreaUseCase,
@@ -21,6 +22,7 @@ export class AreaController {
   @ApiBody({ type: CreateAreaDto })
   @Post()
   async createArea(@Body() area: AreaDomain): Promise<void> {
+    this.logger.log('Creating area');
     await this.createAreaUseCase.create(area);
   }
 
@@ -28,6 +30,7 @@ export class AreaController {
   @ApiResponse({ status: 200, description: 'Returns all areas', type: [AreaDomain] })
   @Get()
   async getAreas(): Promise<AreaDomain[]> {
-    return await this.getAreasUseCase.findAll();
+    this.logger.log('Getting all areas');
+    return this.getAreasUseCase.findAll();
   }
 }

@@ -1,11 +1,13 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { RedisCachePort } from '@/application/port/out/cache.port';
 import { LoadAreasPort } from '@/application/port/out/load-areas.port';
-import { CachedAreas } from "@/shared/types";
 import { CheckAreaPort } from '@/application/port/out/check-area.port';
 import { NEAREST_AREAS_CACHE_TTL, DEFAULT_AREA_LIMIT } from '@/shared/constants';
 import { AreaDomain } from '@/domain/area/area.domain';
-
+export type CachedAreas = {
+  main: AreaDomain;
+  neighbors: AreaDomain[];
+};  
 
 @Injectable()
 export class AreaCacheService {
