@@ -1,4 +1,3 @@
-import { LocationDomain } from '../../domain/location/location.domain';
 import { AreaEntryLogDomain } from '../../domain/log/area-entry-log';
 import { LogAreaEntryUseCase } from '../port/in/log-area-entry.usecase';
 import { LoadAreasPort } from '../port/out/load-areas.port';
@@ -7,6 +6,7 @@ import { CheckAreaPort } from '../port/out/check-area.port';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { LoadAreaEntryLogsPort } from '../port/out/load-area-entry-logs.port';
 import { GetAreaEntryLogsUseCase } from '../port/in/get-area-entry-logs.usecase';
+import { LocationVO } from '@/domain/value-objects/location.vo';
 
 @Injectable()
 export class AreaEntryLogService implements LogAreaEntryUseCase, GetAreaEntryLogsUseCase {
@@ -23,7 +23,7 @@ export class AreaEntryLogService implements LogAreaEntryUseCase, GetAreaEntryLog
     private readonly checkAreaPort: CheckAreaPort
   ) {}
 
-  async logEntry(userId: number, location: LocationDomain): Promise<boolean> {
+  async logEntry(userId: number, location: LocationVO): Promise<boolean> {
     const areas = await this.loadAreasPort.findAll();
     
     if(!areas.length) {

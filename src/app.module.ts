@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LocationModel } from './infrastructure/adapter/out/persistence/model/location.model';
 import { AreaModel } from './infrastructure/adapter/out/persistence/model/area.model';
 import { AreaEntryLogModel } from './infrastructure/adapter/out/persistence/model/area-entry-log.model';
-import { LocationAdapter } from './infrastructure/adapter/out/persistence/location.adapter';
 import { AreaAdapter } from './infrastructure/adapter/out/persistence/area.adapter';
 import { TurfGeometryService } from './infrastructure/adapter/out/geometry/area-geometry.service';
 import { AreaEntryLogService } from './application/service/area-entry-log.service';
@@ -16,10 +14,9 @@ import { AreaController } from './infrastructure/adapter/in/rest/area.controller
 @Module({
   imports: [
     TypeOrmModule.forRoot(databaseConfig),
-    TypeOrmModule.forFeature([LocationModel, AreaModel, AreaEntryLogModel]),
+    TypeOrmModule.forFeature([AreaModel, AreaEntryLogModel]),
   ],
   providers: [
-    LocationAdapter,
     AreaAdapter,
     AreaEntryLogAdapter,
     TurfGeometryService,
