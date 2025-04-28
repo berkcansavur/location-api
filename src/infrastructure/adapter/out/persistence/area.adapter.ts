@@ -15,17 +15,25 @@ export class AreaAdapter implements IAreaRepository, CreateAreaPort, LoadAreasPo
     private readonly entityManager: EntityManager 
   ) {}
 
-  async create(area: AreaDomain): Promise<void> {
-    const model = this.toModel(area);
-    await this.areaRepository.insert(model);
+  async create(domain: AreaDomain): Promise<AreaDomain> {
+    try {
+      const entity = await this.areaRepository.save(domain);
+      return this.toDomain(entity);
+    } catch (error) {
+      throw new Error('Failed to create area');
+    }
   }
 
-  async update(area: AreaDomain): Promise<void> {
-    if (!area.id) {
+  async update(domain: AreaDomain): Promise<AreaDomain> {
+    if (!domain.id) {
       throw new Error('Cannot update area without ID');
     }
-    const model = this.toModel(area);
-    await this.areaRepository.update(area.id, model);
+    try {
+      await this.areaRepository.update(domain.id, domain);
+      return domain
+    } catch (error) {
+      throw new Error('Failed to update area');
+    }
   }
 
   async findById(id: number): Promise<AreaDomain | null> {
@@ -50,16 +58,6 @@ export class AreaAdapter implements IAreaRepository, CreateAreaPort, LoadAreasPo
       .getMany();
 
     return areas.map(this.toDomain);
-  }
-
-  private toModel(domain: AreaDomain): AreaModel {
-    const model = new AreaModel();
-    if (domain.id) {
-      model.id = domain.id;
-    }
-    model.name = domain.name;
-    model.polygon = domain.polygon;
-    return model;
   }
 
   private toDomain(model: AreaModel): AreaDomain {

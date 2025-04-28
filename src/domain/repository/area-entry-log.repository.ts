@@ -1,8 +1,8 @@
-import { AreaEntryLogDomain } from '../log/area-entry-log';
+import { AreaEntryLogDomain } from '../log/area-entry-log.domain';
 
 export interface IAreaEntryLogRepository {  
-  create(domain: AreaEntryLogDomain): Promise<void>;
-  update(domain: AreaEntryLogDomain): Promise<void>;
-  remove(domain: AreaEntryLogDomain): Promise<void>;
+  create(domain: AreaEntryLogDomain): Promise<AreaEntryLogDomain>;
+  update(domain: AreaEntryLogDomain): Promise<AreaEntryLogDomain>;
+  remove(domain: AreaEntryLogDomain): Promise<AreaEntryLogDomain>;
   findAll(): Promise<AreaEntryLogDomain[]>;
 }

@@ -1,4 +1,4 @@
-import { AreaEntryLogDomain } from '../../domain/log/area-entry-log';
+import { AreaEntryLogDomain } from '../../domain/log/area-entry-log.domain';
 import { LogAreaEntryUseCase } from '../port/in/log-area-entry.usecase';
 import { CreateAreaEntryLogPort } from '../port/out/create-area-entry-log.port';
 import { CheckAreaPort } from '../port/out/check-area.port';
@@ -18,15 +18,12 @@ export class AreaEntryLogService implements LogAreaEntryUseCase, GetAreaEntryLog
     private readonly loadAreaEntryLogPort: LoadAreaEntryLogsPort,
     @Inject('CreateAreaEntryLogPort')
     private readonly createAreaEntryLogPort: CreateAreaEntryLogPort,
-    @Inject('CheckAreaPort')
-    private readonly checkAreaPort: CheckAreaPort,
     private readonly areaService: AreaService
   ) {}
 
   async logEntry(userId: number, location: LocationVO): Promise<boolean> {
    const areas = await this.areaService.findNearestAreas(userId, location.longitude, location.latitude);
 
-    
     if(areas == null) {
       this.logger.warn('No areas found');
       return false;

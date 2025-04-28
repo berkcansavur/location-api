@@ -2,7 +2,7 @@ import { LogAreaEntryUseCase } from '@/application/port/in/log-area-entry.usecas
 import { Controller, Post, Body, Param, Logger } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Inject } from '@nestjs/common';
-import { SubmitLocationDto } from './dto/submit-location.dto';
+import { SubmitLocationDto } from './dto/request/submit-location.dto';
 import { LocationVO } from '@/domain/value-objects/location.vo';
 
 @ApiTags('locations')
@@ -18,7 +18,7 @@ export class LocationController {
   @ApiResponse({ status: 200, description: 'Location submitted successfully' })
   @ApiBody({ type: SubmitLocationDto })
   @Post(':userId')
-  async submitLocation(@Body() location: SubmitLocationDto, @Param('userId') userId: number): Promise<boolean> {
+  async submit(@Body() location: SubmitLocationDto, @Param('userId') userId: number): Promise<boolean> {
     this.logger.log('Submitting location');
     const locationVO = LocationVO.create(location.longitude, location.latitude);
     return this.logAreaEntryUseCase.logEntry(userId, locationVO);
