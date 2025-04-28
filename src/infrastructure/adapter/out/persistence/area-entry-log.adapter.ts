@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AreaEntryLogDomain } from '@/domain/log/area-entry-log';
+import { AreaEntryLogDomain } from '@/domain/log/area-entry-log.domain';
 import { IAreaEntryLogRepository } from '@/domain/repository/area-entry-log.repository';
 import { LoadAreaEntryLogsPort } from '@/application/port/out/load-area-entry-logs.port';
 import { AreaEntryLogModel } from './model/area-entry-log.model';
@@ -12,28 +12,46 @@ export class AreaEntryLogAdapter implements IAreaEntryLogRepository, LoadAreaEnt
     @InjectRepository(AreaEntryLogModel)
     private readonly areaEntryLogRepository: Repository<AreaEntryLogModel>
   ) {}
-  async create(domain: AreaEntryLogDomain): Promise<void> {
-    await this.areaEntryLogRepository.insert(domain);
+  async create(domain: AreaEntryLogDomain): Promise<AreaEntryLogDomain> {
+    try {
+      const entity = await this.areaEntryLogRepository.save(domain);
+      return this.toDomain(entity);
+    } catch (error) {
+      throw new Error('Failed to create area entry log');
+    }
   }
 
-  async update(domain: AreaEntryLogDomain): Promise<void> {
-
+  async update(domain: AreaEntryLogDomain): Promise<AreaEntryLogDomain> {
     if (!domain.id) {
       throw new Error('ID is required for persistence');
     }
-    await this.areaEntryLogRepository.update(domain.id, domain);
+    try {
+      await this.areaEntryLogRepository.update(domain.id, domain);
+      return domain;
+    } catch (error) {
+      throw new Error('Failed to update area entry log');
+    }
   }
 
-  async remove(domain: AreaEntryLogDomain): Promise<void> {
+  async remove(domain: AreaEntryLogDomain): Promise<AreaEntryLogDomain> {
     if (!domain.id) {
       throw new Error('ID is required for persistence');
     }
-    await this.areaEntryLogRepository.delete(domain.id);
+    try {
+      await this.areaEntryLogRepository.delete(domain.id);
+      return domain;
+    } catch (error) {
+      throw new Error('Failed to delete area entry log');
+    }
   }
 
   async findAll(): Promise<AreaEntryLogDomain[]> {
-    const entities = await this.areaEntryLogRepository.find();
-    return entities.map(this.toDomain);
+    try {
+      const entities = await this.areaEntryLogRepository.find();
+      return entities.map(this.toDomain);
+    } catch (error) {
+      throw new Error('Failed to find all area entry logs');
+    }
   }
 
 

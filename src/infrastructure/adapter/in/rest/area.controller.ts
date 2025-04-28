@@ -21,15 +21,15 @@ export class AreaController {
   @ApiResponse({ status: 201, description: 'Area created successfully', type: AreaDomain })
   @ApiBody({ type: CreateAreaDto })
   @Post()
-  async createArea(@Body() area: AreaDomain): Promise<void> {
+  async create(@Body() area: AreaDomain): Promise<AreaDomain> {
     this.logger.log('Creating area');
-    await this.createAreaUseCase.create(area);
+    return this.createAreaUseCase.create(area);
   }
 
   @ApiOperation({ summary: 'Get all areas' })
   @ApiResponse({ status: 200, description: 'Returns all areas', type: [AreaDomain] })
   @Get()
-  async getAreas(): Promise<AreaDomain[]> {
+  async getAll(): Promise<AreaDomain[]> {
     this.logger.log('Getting all areas');
     return this.getAreasUseCase.findAll();
   }

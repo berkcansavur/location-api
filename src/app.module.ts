@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module, OnModuleDestroy } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AreaModel } from './infrastructure/adapter/out/persistence/model/area.model';
 import { AreaEntryLogModel } from './infrastructure/adapter/out/persistence/model/area-entry-log.model';
@@ -11,19 +11,19 @@ import { AreaService } from './application/service/area.service';
 import { LogController } from './infrastructure/adapter/in/rest/log.controller';
 import { LocationController } from './infrastructure/adapter/in/rest/location.controller';
 import { AreaController } from './infrastructure/adapter/in/rest/area.controller';
-import { RedisCacheAdapter } from './infrastructure/adapter/out/cache/redis/redis-cache.adapter';
+import { RedisCacheAdapter } from './infrastructure/adapter/out/cache/redis/redis.adapter';
 import { redisConfig } from './config/redis.config';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { AreaCacheService } from './application/service/area-cache.service';
 import { dataSource } from './config/data-source';
+import { DataSource } from 'typeorm';
+import { createClient } from 'redis';
+import { GracefulShutdownManager } from './infrastructure/adapter/greaceful-shutdown-manager';
 
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      useFactory: () => databaseConfig,
-      dataSourceFactory: async () => await dataSource.initialize(),
-    }),
+    TypeOrmModule.forRoot(databaseConfig),
     TypeOrmModule.forFeature([AreaModel, AreaEntryLogModel]),
     RedisModule.forRoot(redisConfig),
   ],
@@ -69,6 +69,24 @@ import { dataSource } from './config/data-source';
       provide: 'RedisCachePort',
       useClass: RedisCacheAdapter,
     },
+    {
+      provide: DataSource,
+      useFactory: async () => {
+        if (!dataSource.isInitialized) {
+          await dataSource.initialize();
+        }
+        return dataSource;
+      },
+    },
+    {
+      provide: 'REDIS_CLIENT',
+      useFactory: async () => {
+        const client = createClient({ url: process.env.REDIS_URL });
+        await client.connect();
+        return client;
+      },
+    },
+    GracefulShutdownManager
   ],
   controllers: [
     AreaController,

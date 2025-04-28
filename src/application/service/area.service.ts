@@ -18,11 +18,11 @@ export class AreaService implements CreateAreaUseCase, GetAreasUseCase {
     private readonly areaCacheService: AreaCacheService
   ) {}
 
-  async create(areaInput: AreaDomain): Promise<void> {
+  async create(areaInput: AreaDomain): Promise<AreaDomain> {
     try {
       this.logger.log('Creating area');
       const area = AreaDomain.create(areaInput.name, areaInput.polygon);
-      await this.createAreaPort.create(area);
+      return this.createAreaPort.create(area);
     } catch (error) {
       this.logger.error(error);
       throw new Error('Failed to create area');

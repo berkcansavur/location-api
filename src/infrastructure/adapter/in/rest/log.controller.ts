@@ -1,5 +1,5 @@
 import { GetAreaEntryLogsUseCase } from '@/application/port/in/get-area-entry-logs.usecase';
-import { AreaEntryLogDomain } from '@/domain/log/area-entry-log';
+import { AreaEntryLogDomain } from '@/domain/log/area-entry-log.domain';
 import { Controller, Get, Logger } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';  
 import { Inject } from '@nestjs/common';

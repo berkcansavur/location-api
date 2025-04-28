@@ -7,7 +7,9 @@ async function bootstrap() {
   const logger = new Logger('Location Tracking API');
 
   const app = await NestFactory.create(AppModule);
-
+  
+  app.enableShutdownHooks();
+  
   const config = new DocumentBuilder()
     .setTitle('Location Tracking API')
     .setDescription('Location Tracking API documentation')
