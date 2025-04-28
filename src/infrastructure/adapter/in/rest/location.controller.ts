@@ -2,7 +2,7 @@ import { LogAreaEntryUseCase } from '@/application/port/in/log-area-entry.usecas
 import { Controller, Post, Body, Param, Logger } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Inject } from '@nestjs/common';
-import { SubmitLocationDto } from './dto/submit-location.dto';
+import { SubmitLocationDto } from './dto/request/submit-location.dto';
 import { LocationVO } from '@/domain/value-objects/location.vo';
 
 @ApiTags('locations')

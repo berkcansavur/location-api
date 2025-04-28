@@ -4,7 +4,7 @@ import { AreaDomain } from '@/domain/area/area.domain';
 import { Controller, Post, Get, Body, Logger } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Inject } from '@nestjs/common';
-import { CreateAreaDto } from './dto/create-area.dto';
+import { CreateAreaDto } from './dto/request/create-area.dto';
 import { AreaResponseDto } from './dto/response/area.response.dto';
 
 @ApiTags('areas')
